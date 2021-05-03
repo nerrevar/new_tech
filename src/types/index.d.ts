@@ -1,7 +1,14 @@
-type TItem = {
+type TSelectItem = {
   imgSrc?: string,
   text?: string,
   propValue: number,
 }
 
-export { TItem }
+type TItem = {
+  imgSrc: string,
+  name: string,
+  price: number,
+  description: string,
+}
+
+export { TItem, TSelectItem }

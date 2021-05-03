@@ -18,13 +18,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import { TItem } from '@/types/index'
+import { TSelectItem } from '@/types/index'
 
 export default defineComponent({
   name: 'SelectOption',
   props: {
     item: {
-      type: Object as () => TItem,
+      type: Object as () => TSelectItem,
       required: true,
     },
     selectType: {

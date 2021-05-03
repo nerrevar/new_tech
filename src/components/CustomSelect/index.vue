@@ -37,7 +37,7 @@
 import { defineComponent, ref } from 'vue'
 import SelectOption from './SelectOption.vue'
 
-import { TItem } from '@/types/index'
+import { TSelectItem } from '@/types/index'
 
 export default defineComponent({
   name: 'CustomSelect',
@@ -48,7 +48,7 @@ export default defineComponent({
       required: false,
     },
     itemList: {
-      type: Array as () => Array<TItem>,
+      type: Array as () => Array<TSelectItem>,
       required: true,
     },
     width: {
@@ -108,10 +108,10 @@ export default defineComponent({
     const initSelectedItem = () => props.defaultIndex ? props.itemList[props.defaultIndex] : props.itemList[0]
 
     let opened = ref<boolean>(false)
-    const selectedItem = ref<TItem>(initSelectedItem())
+    const selectedItem = ref<TSelectItem>(initSelectedItem())
     const selectWidth = getWidth()
 
-    const setSelected = (item: TItem) => {
+    const setSelected = (item: TSelectItem) => {
       opened = ref<boolean>(false) // костыль, opened.value не реактивно
       selectedItem.value = item
       emit('itemSelected', item.propValue)

@@ -18,6 +18,15 @@
       </div>
     </div>
     <div class="items">
+      <ItemCard
+        :item="{
+          imgSrc: 'cart.png',
+          name: 'Cart',
+          price: 1,
+          description: 'cart',
+        }"
+        :short="true"
+      />
     </div>
   </div>
 </template>
@@ -25,6 +34,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import CustomSelect from '@/components/CustomSelect/index.vue'
+import ItemCard from '@/components/ItemCard.vue'
 
 enum ESortValues {
   priceAsc,
@@ -37,6 +47,7 @@ export default defineComponent({
   name: 'MainView',
   components: {
     CustomSelect,
+    ItemCard,
   },
   setup () {
     const updateSort = (value: ESortValues) => {
@@ -60,4 +71,7 @@ export default defineComponent({
   flex: 1 1
   flex-flow: row-reverse nowrap
   background-color: #64B5F6
+
+.items
+  padding: 0.5em
 </style>
