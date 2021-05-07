@@ -1,5 +1,12 @@
 <template>
-  <router-view />
+  <Suspense>
+    <template #default>
+      <router-view />
+    </template>
+    <template #fallback>
+      Loading...
+    </template>
+  </Suspense>
   <div class="cart" v-bind="$attrs">
     <div class="cart__image">
       <img src="@/assets/img/cart.png" alt="&#128722;" /><!--replace with unicode image-->
@@ -9,7 +16,7 @@
       class="cart__count"
       v-if="getCartCount !== 0"
     >
-      <span>{{ getCartCount }}</span>
+      <span>{{ getCartCount() }}</span>
     </div>
   </div>
 </template>
@@ -17,11 +24,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-export default defineComponent ({
+export default defineComponent({
   name: 'Layout',
-  computed: {
-    getCartCount () {
+  setup () {
+    const getCartCount = () => {
       return 1
+    }
+
+    return {
+      getCartCount,
     }
   },
 })
@@ -48,11 +59,13 @@ $cart-size: 5rem
     left: 0.25rem
 
 .cart
-  position: absolute
-  right: 3rem
-  bottom: 3rem
+  position: fixed
+  left: calc(100vw - #{$cart-size} - 3em)
+  top: calc(100vh - #{$cart-size} - 3em)
   width: $cart-size
   height: $cart-size
+
+  cursor: pointer
 
   &__border
     position: absolute

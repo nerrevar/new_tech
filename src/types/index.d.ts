@@ -1,14 +1,13 @@
-type TSelectItem = {
-  imgSrc?: string,
-  text?: string,
-  propValue: number,
+import { TSelectItem } from './CustomSelect'
+import { TItem } from './Item'
+import { TCategory } from './Category'
+
+type TRequestConfig = {
+  storeId: string,
+  token: string,
+  baseUrl: string,
+  itemOnPage: number,
+  currentPage: number,
 }
 
-type TItem = {
-  imgSrc: string,
-  name: string,
-  price: number,
-  description: string,
-}
-
-export { TItem, TSelectItem }
+export { TItem, TSelectItem, TObjectOfStrings, TCategory, TRequestConfig }

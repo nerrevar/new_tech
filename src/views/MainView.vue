@@ -1,40 +1,45 @@
 <template>
-  <div class="wrapper">
-    <div class="toolbox">
-      <div class="toolbox__view">
-      </div>
-      <div class="toolbox__filters">
-      </div>
-      <div class="toolbox__sort">
-        <CustomSelect
-          :itemList="[
-            { text: '&#129041;  Цена', propValue: ESortValues.priceAsc },
-            { text: '&#129043;  Цена', propValue: ESortValues.priceDesc },
-            { text: '&#129041;  Рейтинг', propValue: ESortValues.ratingAsc },
-            { text: '&#129043;  Рейтинг', propValue: ESortValues.ratingDesc },
-          ]"
-          @itemSelected="updateSort($event)"
-        />
-      </div>
+  <div class="toolbox">
+    <div class="toolbox__view">
     </div>
-    <div class="items">
-      <ItemCard
-        :item="{
-          imgSrc: 'cart.png',
-          name: 'Cart',
-          price: 1,
-          description: 'cart',
-        }"
-        :short="true"
+    <div class="toolbox__filters">
+    </div>
+    <div class="toolbox__sort">
+      <CustomSelect
+        :itemList="[
+          { text: '&#129041;  Цена', propValue: ESortValues.priceAsc },
+          { text: '&#129043;  Цена', propValue: ESortValues.priceDesc },
+          { text: '&#129041;  Рейтинг', propValue: ESortValues.ratingAsc },
+          { text: '&#129043;  Рейтинг', propValue: ESortValues.ratingDesc },
+        ]"
+        @itemSelected="updateSort($event)"
       />
     </div>
+  </div>
+  <div
+    :class="{
+      'items': !short,
+      'items_grid': short,
+    }"
+    >
+    <ItemCard
+      v-for="(item, index) in itemArr"
+      :key="index"
+      :item="item"
+      :short="short"
+      :categoryNames="getCategoryNames(item.categoryIds)"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import CustomSelect from '@/components/CustomSelect/index.vue'
 import ItemCard from '@/components/ItemCard.vue'
+
+import { itemRequest, categoryRequest } from '@/utils/index'
+
+import { TCategory, TItem } from '@/types/index'
 
 enum ESortValues {
   priceAsc,
@@ -49,14 +54,33 @@ export default defineComponent({
     CustomSelect,
     ItemCard,
   },
-  setup () {
+  async setup () {
     const updateSort = (value: ESortValues) => {
       console.log(ESortValues[value])
+    }
+
+    const itemArr = ref<TItem[]>(await itemRequest())
+
+    const categoryArr = ref<TCategory[]>(await categoryRequest())
+
+    const short = ref<boolean>(true)
+
+    const getCategoryNames = (idArr: number[]): string[] => {
+      const categoryNames: string[] = []
+      categoryArr.value.filter(
+        (c: TCategory) => idArr.indexOf(c.id) !== -1
+      ).map(
+        (c: TCategory) => categoryNames.push(c.name)
+      )
+      return categoryNames
     }
 
     return {
       ESortValues,
       updateSort,
+      short,
+      itemArr,
+      getCategoryNames,
     }
   },
 })
@@ -74,4 +98,13 @@ export default defineComponent({
 
 .items
   padding: 0.5em
+  display: flex
+  flex-flow: column nowrap
+
+.items_grid
+  padding: 0.5em
+  display: flex
+  flex-flow: row wrap
+  justify-content: space-around
+  align-items: stretch
 </style>
