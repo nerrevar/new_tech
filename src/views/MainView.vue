@@ -1,27 +1,11 @@
 <template>
-  <div class="toolbox">
-    <div class="toolbox__view">
-    </div>
-    <div class="toolbox__filters">
-    </div>
-    <div class="toolbox__sort">
-      <CustomSelect
-        :itemList="[
-          { text: '&#129041;  Цена', propValue: ESortValues.priceAsc },
-          { text: '&#129043;  Цена', propValue: ESortValues.priceDesc },
-          { text: '&#129041;  Рейтинг', propValue: ESortValues.ratingAsc },
-          { text: '&#129043;  Рейтинг', propValue: ESortValues.ratingDesc },
-        ]"
-        @itemSelected="updateSort($event)"
-      />
-    </div>
-  </div>
+  <ToolboxMain />
   <div
     :class="{
       'items': !short,
       'items_grid': short,
     }"
-    >
+  >
     <ItemCard
       v-for="(item, index) in itemArr"
       :key="index"
@@ -33,33 +17,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import CustomSelect from '@/components/CustomSelect/index.vue'
-import ItemCard from '@/components/ItemCard.vue'
-
-import { itemRequest, categoryRequest } from '@/utils/index'
+import { defineComponent, ref, readonly, provide } from 'vue'
 
 import { TCategory, TItem } from '@/types/index'
 
-enum ESortValues {
-  priceAsc,
-  priceDesc,
-  ratingAsc,
-  ratingDesc,
-}
+import { itemRequest, categoryRequest, SortValues } from '@/utils/index'
+
+import ItemCard from '@/components/ItemCard.vue'
+import ToolboxMain from '@/components/ToolboxMain.vue'
 
 export default defineComponent({
   name: 'MainView',
   components: {
-    CustomSelect,
     ItemCard,
+    ToolboxMain,
   },
   async setup () {
-    const updateSort = (value: ESortValues) => {
-      console.log(ESortValues[value])
+    const sortValue = ref<number>(SortValues.PRICE_ASC)
+    const updateSort = async (value: number) => {
+      sortValue.value = value
+      itemArr.value = await itemRequest(sortValue.value)
     }
+    provide('sortValue', readonly(sortValue))
+    provide('updateSort', updateSort)
 
-    const itemArr = ref<TItem[]>(await itemRequest())
+    const itemArr = ref<TItem[]>(await itemRequest(sortValue.value))
 
     const categoryArr = ref<TCategory[]>(await categoryRequest())
 
@@ -76,8 +58,6 @@ export default defineComponent({
     }
 
     return {
-      ESortValues,
-      updateSort,
       short,
       itemArr,
       getCategoryNames,
@@ -87,15 +67,6 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-.toolbox
-  margin: 1rem 0
-  padding: 0.25rem
-  width: 100%
-  display: flex
-  flex: 1 1
-  flex-flow: row-reverse nowrap
-  background-color: #64B5F6
-
 .items
   padding: 0.5em
   display: flex

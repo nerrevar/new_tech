@@ -56,7 +56,7 @@ export default defineComponent({
     categoryNames: {
       type: Array as () => Array<string>,
       required: true,
-    }
+    },
   },
   setup (props) {
     const description: string = props.item.description
@@ -66,7 +66,7 @@ export default defineComponent({
     return {
       description,
     }
-  }
+  },
 })
 </script>
 
@@ -119,7 +119,7 @@ export default defineComponent({
   flex: 0 0
   flex-flow: column nowrap
   max-width: 300px
-  margin: 1em
+  margin: 1em auto 1em 1em
 
   padding: 0.3em
   box-shadow: 1px 1px 5px 5px lightgrey

@@ -10,4 +10,11 @@ type TRequestConfig = {
   currentPage: number,
 }
 
-export { TItem, TSelectItem, TObjectOfStrings, TCategory, TRequestConfig }
+export {
+  TSelectItem,
+
+  TRequestConfig,
+
+  TItem,
+  TCategory,
+}
