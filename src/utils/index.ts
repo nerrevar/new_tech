@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 
-import { TCategory, TItem, TRequestConfig } from '@/types/index'
+import { TCategory, TItem, TRequestConfig, TFilter } from '@/types/index'
 
 const storeId = '58958138'
 
@@ -12,19 +12,23 @@ const requestConfig = reactive<TRequestConfig>({
   currentPage: 0,
 })
 
-const itemRequest = async (sortValue: number): Promise<TItem[]> => {
+const itemRequest = async (sortValue: number, filters: TFilter[]): Promise<TItem[]> => {
+  let request = `${
+    requestConfig.baseUrl
+  }/products?limit=${
+    requestConfig.itemOnPage
+  }&offset=${
+    requestConfig.currentPage * requestConfig.itemOnPage
+  }&sortBy=${
+    Object.keys(SortValues)[sortValue]
+  }&token=${
+    requestConfig.token
+  }`
+  for (let filter of filters)
+    if (filter.value)
+      request += `&${filter.name}=${filter.value}`
   return fetch(
-    `${
-      requestConfig.baseUrl
-    }/products?limit=${
-      requestConfig.itemOnPage
-    }&offset=${
-      requestConfig.currentPage * requestConfig.itemOnPage
-    }&sortBy=${
-      Object.keys(SortValues)[sortValue]
-    }&token=${
-      requestConfig.token
-    }`
+    request
   ).then(
     r => r.json()
   ).then(

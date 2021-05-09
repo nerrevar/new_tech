@@ -15,9 +15,25 @@ type TImgDescription = {
   altText: string,
 }
 
+type TFilter = {
+  displayName: string,
+  name: string,
+  value: boolean,
+}
+
+type TGenericFunction = () => void
+type TFunctionParamsStringBoolean = (s: string, b: boolean) => void
+type TFunctionParamsFilterarr = (filters: TFilter[]) => void
+
 export {
   TSelectItem,
   TImgDescription,
+
+  TGenericFunction,
+  TFunctionParamsStringBoolean,
+  TFunctionParamsFilterarr,
+
+  TFilter,
 
   TRequestConfig,
 

@@ -16,7 +16,14 @@
         @stateSwitched="switchView($event)"
       />
     </div>
-    <div class="toolbox__filters">
+    <div
+      class="toolbox__filters"
+      @click="openFilters"
+    >
+      Фильтры
+      <FilterFrame
+        v-if="filtersOpened"
+      />
     </div>
     <div class="toolbox__sort">
       <CustomSelect
@@ -28,17 +35,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue'
+import { defineComponent, inject, provide, ref } from 'vue'
 
 import { SortValues } from '@/utils/index'
 
+import { TGenericFunction } from '@/types/index'
+
 import CustomSelect from '@/components/CustomSelect/index.vue'
+import FilterFrame from '@/components/FilterFrame.vue'
 import SwitchableButton from '@/components/SwitchableButton.vue'
 
 export default defineComponent({
   name: 'ToolboxMain',
   components: {
     CustomSelect,
+    FilterFrame,
     SwitchableButton,
   },
   setup () {
@@ -52,11 +63,18 @@ export default defineComponent({
       { text: '\u{1F811}  Цена', propValue: SortValues.PRICE_DESC }
     ]
 
+    const filtersOpened = ref<boolean>(false)
+    const openFilters = () => filtersOpened.value = true
+    const closeFilters = () => filtersOpened.value = false
+    provide<TGenericFunction>('closeFilters', closeFilters)
+
     const switchView = inject('switchView')
 
     return {
       updateSort,
       sortList,
+      filtersOpened,
+      openFilters,
       switchView,
     }
   },
@@ -83,4 +101,8 @@ export default defineComponent({
   &__filters
     display: flex
     margin: 0 0.3em
+    background-color: #F3E5F5
+    align-items: center
+
+    padding: 0.5em
 </style>

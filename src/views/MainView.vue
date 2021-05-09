@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, readonly, provide } from 'vue'
+import { defineComponent, ref, reactive, readonly, provide } from 'vue'
 
-import { TCategory, TItem } from '@/types/index'
+import { TCategory, TItem, TFilter, TFunctionParamsFilterarr } from '@/types/index'
 
 import { itemRequest, categoryRequest, SortValues } from '@/utils/index'
 
@@ -36,7 +36,7 @@ export default defineComponent({
     const sortValue = ref<number>(SortValues.PRICE_ASC)
     const updateSort = async (value: number) => {
       sortValue.value = value
-      itemArr.value = await itemRequest(sortValue.value)
+      itemArr.value = await itemRequest(sortValue.value, filters)
     }
     provide('sortValue', readonly(sortValue))
     provide('updateSort', updateSort)
@@ -45,7 +45,20 @@ export default defineComponent({
     const switchView = (value: number) => short.value = value === 1
     provide('switchView', switchView)
 
-    const itemArr = ref<TItem[]>(await itemRequest(sortValue.value))
+    const filters = reactive<TFilter[]>([
+      {
+        displayName: 'На складе',
+        name: 'inStock',
+        value: false,
+      }
+    ])
+    const applyFilters: TFunctionParamsFilterarr = async (newFilters: TFilter[]) => {
+      itemArr.value = await itemRequest(sortValue.value, newFilters)
+    }
+    provide('filters', filters)
+    provide('applyFilters', applyFilters)
+
+    const itemArr = ref<TItem[]>(await itemRequest(sortValue.value, filters))
 
     const categoryArr = ref<TCategory[]>(await categoryRequest())
     const getCategoryNames = (idArr: number[]): string[] => {
