@@ -21,18 +21,18 @@
       >
         {{ description }}
       </span>
-    </div>
-    <div
-      class="item__categories"
-      v-if="categoryNames.length !== 0"
-    >
-      <span
-        class="item__categories-card"
-        v-for="(category, index) in categoryNames"
-        :key="index"
+      <div
+        class="item__categories"
+        v-if="categoryNames.length !== 0"
       >
-        {{ category }}
-      </span>
+        <span
+          class="item__categories-card"
+          v-for="(category, index) in categoryNames"
+          :key="index"
+        >
+          {{ category }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +75,7 @@ export default defineComponent({
   display: flex
   flex: 1 0
   flex-flow: row nowrap
+  margin-bottom: 1em
 
   box-shadow: 1px 1px 5px 5px lightgrey
   cursor: pointer
@@ -86,6 +87,9 @@ export default defineComponent({
     display: flex
     flex: 1 0
     flex-flow: column nowrap
+    justify-content: space-around
+
+    padding: 0.3em
 
   &__name
     font-weight: 600
@@ -94,6 +98,9 @@ export default defineComponent({
   &__price
     font-weight: 800
     padding: 1em 0
+
+  &__description, &__description_short
+    color: grey
 
   &__description_short
     display: flex
@@ -104,7 +111,7 @@ export default defineComponent({
 
   &__categories
     display: flex
-    flex: 1 0
+    flex: 0 0
     flex-flow: row nowrap
     margin: 0 -0.2em
 
@@ -113,6 +120,7 @@ export default defineComponent({
     padding: 0.3em 1em
     border-radius: 1em
     background-color: lightblue
+    height: 1.8em
 
 .item_short
   display: flex

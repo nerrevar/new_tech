@@ -10,8 +10,14 @@ type TRequestConfig = {
   currentPage: number,
 }
 
+type TImgDescription = {
+  imgSrc: string,
+  altText: string,
+}
+
 export {
   TSelectItem,
+  TImgDescription,
 
   TRequestConfig,
 

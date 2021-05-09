@@ -41,12 +41,13 @@ export default defineComponent({
     provide('sortValue', readonly(sortValue))
     provide('updateSort', updateSort)
 
+    const short = ref<boolean>(false)
+    const switchView = (value: number) => short.value = value === 1
+    provide('switchView', switchView)
+
     const itemArr = ref<TItem[]>(await itemRequest(sortValue.value))
 
     const categoryArr = ref<TCategory[]>(await categoryRequest())
-
-    const short = ref<boolean>(true)
-
     const getCategoryNames = (idArr: number[]): string[] => {
       const categoryNames: string[] = []
       categoryArr.value.filter(
@@ -67,15 +68,14 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-.items
+.items, .items_grid
   padding: 0.5em
   display: flex
+
+.items
   flex-flow: column nowrap
 
 .items_grid
-  padding: 0.5em
-  display: flex
   flex-flow: row wrap
   justify-content: space-around
-  align-items: stretch
 </style>
