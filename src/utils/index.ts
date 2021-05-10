@@ -36,6 +36,14 @@ const itemRequest = async (sortValue: number, filters: TFilter[]): Promise<TItem
   )
 }
 
+const singeItemRequest = async (id: string): Promise<TItem> => {
+  return fetch(
+    `${requestConfig.baseUrl}/products/${id}?token=${requestConfig.token}`
+  ).then(
+    r => r.json()
+  )
+}
+
 const categoryRequest = async ():Promise<TCategory[]> => {
   return fetch(
     `${requestConfig.baseUrl}/categories?token=${requestConfig.token}`
@@ -59,4 +67,4 @@ const SortValues = {
   UPDATED_TIME_DESC: 9,
 }
 
-export { categoryRequest, itemRequest, requestConfig, SortValues }
+export { categoryRequest, itemRequest, singeItemRequest, requestConfig, SortValues }

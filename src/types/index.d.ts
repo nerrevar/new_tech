@@ -22,16 +22,20 @@ type TFilter = {
 }
 
 type TGenericFunction = () => void
+type TFunctionParamsNumber = (index: number) => void
 type TFunctionParamsStringBoolean = (s: string, b: boolean) => void
 type TFunctionParamsFilterarr = (filters: TFilter[]) => void
+type TFunctionParamsTItem = (item: TItem) => void
 
 export {
   TSelectItem,
   TImgDescription,
 
   TGenericFunction,
+  TFunctionParamsNumber,
   TFunctionParamsStringBoolean,
   TFunctionParamsFilterarr,
+  TFunctionParamsTItem,
 
   TFilter,
 

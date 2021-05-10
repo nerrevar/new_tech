@@ -1,7 +1,9 @@
 <template>
   <Suspense>
     <template #default>
-      <router-view />
+      <router-view
+        @addToCart="addToCart($event)"
+      />
     </template>
     <template #fallback>
       Loading...
@@ -22,7 +24,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, provide, readonly } from 'vue'
+
+import { TItem } from '@/types/index'
 
 export default defineComponent({
   name: 'Layout',
@@ -31,8 +35,15 @@ export default defineComponent({
       return 1
     }
 
+    const cart = ref<TItem[]>([])
+    const addToCart = (item: TItem) => cart.value.push(item)
+    const removeFromCart = (index: number) => delete cart.value[index]
+    provide('cart', readonly(cart))
+
     return {
       getCartCount,
+      addToCart,
+      removeFromCart,
     }
   },
 })

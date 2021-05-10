@@ -1,9 +1,10 @@
 <template>
-  <div
+  <router-link
     :class="{
       item: !short,
       item_short: short,
     }"
+    :to="`/product/${item.id}`"
   >
     <img
       class="item__image"
@@ -34,7 +35,7 @@
         </span>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">

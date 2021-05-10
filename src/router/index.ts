@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
     component: MainView,
   },
   {
-    path: '/:category/:itemId',
+    path: '/product/:itemId',
     name: 'ItemView',
     component: ItemView,
   },
@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 })
 
 export default router

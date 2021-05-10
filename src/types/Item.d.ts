@@ -68,13 +68,62 @@ type TRelatedCategory = {
 
 type TRelatedProducts = {
   productIds: number[],
-  relatedCategory: TRelatedCategory
+  relatedCategory: TRelatedCategory,
 }
 
 type TDimensions = {
   length: number,
   width: number,
   height: number,
+}
+
+type TOptionChoice = {
+  text: string,
+  textTranslated: TNameTranslated,
+  priceModifier: number,
+  priceModifierType: string,
+}
+
+type TItemOption = {
+  type: string,
+  name: string,
+  nameTranslated: TNameTranslated,
+  choices: TOptionChoice[],
+  defaultChoice: number,
+  required: boolean,
+}
+
+type TOriginalImage = {
+  url: string,
+  width: number,
+  height: number,
+}
+
+type TColor = {
+  red: number,
+  green: number,
+  blue: number,
+  alpha: number,
+}
+
+type TBorderInfo = {
+  dominatingColor: TColor,
+  homogeneity: boolean,
+}
+
+type TImage = {
+  id: number,
+  url: string,
+  thumbnail: string,
+  originalImageUrl: string,
+  imageUrl: string,
+  hdThumbnailUrl: string,
+  thumbnailUrl: string,
+  smallThumbnailUrl: string,
+  width: number,
+  height: number,
+  orderBy: number,
+  borderInfo: TBorderInfo,
 }
 
 type TItem = {
@@ -87,6 +136,7 @@ type TItem = {
   name: string,
   nameTranslated: TNameTranslated,
   price: number,
+  priceInProductList: number,
   defaultDisplayedPrice: number,
   defaultDisplayedPriceFormatted: string,
   tax: TTax,
@@ -106,14 +156,21 @@ type TItem = {
   updateTimestamp: number,
   productClassId: number,
   enabled: boolean,
-  options: Array,
+  options: TItemOption[],
   warningLimit: number,
   fixedShippingRateOnly: boolean,
   fixedShippingRate: number,
   shipping: TShipping,
   defaultCombinationId: number,
+  imageUrl: string,
+  smallThumbnailUrl: string,
+  hdThumbnailUrl: string,
+  originalImageUrl: string,
+  originalImage: TOriginalImage,
+  borderInfo: TBorderInfo,
   description: string,
   descriptionTranslated: TDescriptionTranslated,
+  galleryImages: TImage[],
   media: TItemMedia,
   categoryIds: number[],
   categories: TCategory[],
@@ -128,6 +185,11 @@ type TItem = {
   dimensions: TDimensions,
   showOnFrontpage: number,
   isSampleProduct: boolean,
+  googleItemCondition: string,
+  isGiftCard: boolean,
+  discountsAllowed: boolean,
+  nameYourPriceEnabled: boolean,
 }
+
 
 export { TItem }
