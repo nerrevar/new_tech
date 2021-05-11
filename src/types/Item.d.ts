@@ -192,4 +192,4 @@ type TItem = {
 }
 
 
-export { TItem }
+export { TItem, TItemOption }

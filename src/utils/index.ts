@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 
-import { TCategory, TItem, TRequestConfig, TFilter } from '@/types/index'
+import { TCategory, TItem, TRequestConfig } from '@/types/index'
+import { IFilter } from '@/store'
 
 const storeId = '58958138'
 
@@ -12,7 +13,7 @@ const requestConfig = reactive<TRequestConfig>({
   currentPage: 0,
 })
 
-const itemRequest = async (sortValue: number, filters: TFilter[]): Promise<TItem[]> => {
+const itemRequest = async (sortValue: number, filters: IFilter[]): Promise<TItem[]> => {
   let request = `${
     requestConfig.baseUrl
   }/products?limit=${
@@ -36,7 +37,7 @@ const itemRequest = async (sortValue: number, filters: TFilter[]): Promise<TItem
   )
 }
 
-const singeItemRequest = async (id: string): Promise<TItem> => {
+const singleItemRequest = async (id: string): Promise<TItem> => {
   return fetch(
     `${requestConfig.baseUrl}/products/${id}?token=${requestConfig.token}`
   ).then(
@@ -67,4 +68,4 @@ const SortValues = {
   UPDATED_TIME_DESC: 9,
 }
 
-export { categoryRequest, itemRequest, singeItemRequest, requestConfig, SortValues }
+export { categoryRequest, itemRequest, singleItemRequest, requestConfig, SortValues }

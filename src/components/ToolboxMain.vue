@@ -22,7 +22,7 @@
     >
       Фильтры
       <FilterFrame
-        v-if="filtersOpened"
+        v-if="setFiltersOpened(true)"
       />
     </div>
     <div class="toolbox__sort">
@@ -35,11 +35,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, provide, ref } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useStore } from '@/store'
 
 import { SortValues } from '@/utils/index'
-
-import { TGenericFunction } from '@/types/index'
 
 import CustomSelect from '@/components/CustomSelect/index.vue'
 import FilterFrame from '@/components/FilterFrame.vue'
@@ -53,7 +52,9 @@ export default defineComponent({
     SwitchableButton,
   },
   setup () {
-    const updateSort = inject('updateSort')
+    const store = useStore()
+
+    const updateSort = (sortValue: number) => store.commit('updateSort', sortValue)
 
     const sortList = [
       { text: 'Лучшее совпадение', propValue: SortValues.RELEVANCE },
@@ -63,18 +64,16 @@ export default defineComponent({
       { text: '\u{1F811}  Цена', propValue: SortValues.PRICE_DESC }
     ]
 
-    const filtersOpened = ref<boolean>(false)
-    const openFilters = () => filtersOpened.value = true
-    const closeFilters = () => filtersOpened.value = false
-    provide<TGenericFunction>('closeFilters', closeFilters)
+    const filtersOpened = computed(() => store.state.mainViewOptions.filtersOpened)
+    const setFiltersOpened = (value: boolean) => store.commit('setFiltersOpened', value)
 
-    const switchView = inject('switchView')
+    const switchView = () => store.commit('switchView')
 
     return {
       updateSort,
       sortList,
       filtersOpened,
-      openFilters,
+      setFiltersOpened,
       switchView,
     }
   },

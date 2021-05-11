@@ -1,5 +1,5 @@
 import { TSelectItem } from './CustomSelect'
-import { TItem } from './Item'
+import { TItem, TItemOption } from './Item'
 import { TCategory } from './Category'
 
 type TRequestConfig = {
@@ -27,6 +27,27 @@ type TFunctionParamsStringBoolean = (s: string, b: boolean) => void
 type TFunctionParamsFilterarr = (filters: TFilter[]) => void
 type TFunctionParamsTItem = (item: TItem) => void
 
+interface IOptionInCart {
+  name: string,
+  value: string,
+}
+
+interface IItemInCart {
+  id: number,
+  imageUrl: string,
+  name: string,
+  price: number,
+  description: string,
+  categoryIds: number[],
+  categoryNames: string[],
+  options: IOptionInCart[],
+  count: number
+}
+
+interface IOption {
+  [key: string]: Array<boolean>,
+}
+
 export {
   TSelectItem,
   TImgDescription,
@@ -42,5 +63,10 @@ export {
   TRequestConfig,
 
   TItem,
+  TItemOption,
   TCategory,
+
+  IItemInCart,
+  IOptionInCart,
+  IOption,
 }

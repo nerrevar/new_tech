@@ -1,49 +1,36 @@
 <template>
-  <Suspense>
-    <template #default>
-      <router-view
-        @addToCart="addToCart($event)"
-      />
-    </template>
-    <template #fallback>
-      Loading...
-    </template>
-  </Suspense>
-  <div class="cart" v-bind="$attrs">
+  <router-view />
+  <router-link
+    class="cart"
+    to="/cart"
+  >
     <div class="cart__image">
       <img src="@/assets/img/cart.png" alt="&#128722;" /><!--replace with unicode image-->
     </div>
     <div class="cart__border"></div>
     <div
       class="cart__count"
-      v-if="getCartCount !== 0"
+      v-if="countInCart !== 0"
     >
-      <span>{{ getCartCount() }}</span>
+      <span>{{ countInCart }}</span>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, provide, readonly } from 'vue'
+import { defineComponent, computed } from 'vue'
 
-import { TItem } from '@/types/index'
+import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'Layout',
   setup () {
-    const getCartCount = () => {
-      return 1
-    }
+    const store = useStore()
 
-    const cart = ref<TItem[]>([])
-    const addToCart = (item: TItem) => cart.value.push(item)
-    const removeFromCart = (index: number) => delete cart.value[index]
-    provide('cart', readonly(cart))
+    const countInCart = computed(() => store.state.countInCart)
 
     return {
-      getCartCount,
-      addToCart,
-      removeFromCart,
+      countInCart,
     }
   },
 })

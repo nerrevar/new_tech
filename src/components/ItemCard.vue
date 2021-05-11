@@ -13,7 +13,7 @@
     />
     <div class="item__text">
       <span class="item__name">{{ item.name }}</span>
-      <span class="item__price">{{ item.defaultDisplayedPriceFormatted }}</span>
+      <span class="item__price">{{ item.price }} руб</span>
       <span
         :class="{
           item__description: !short,
@@ -24,48 +24,71 @@
       </span>
       <div
         class="item__categories"
-        v-if="categoryNames.length !== 0"
+        v-if="item.categoryIds.length !== 0"
       >
         <span
           class="item__categories-card"
-          v-for="(category, index) in categoryNames"
+          v-for="(categoryId, index) in item.categoryIds"
           :key="index"
         >
-          {{ category }}
+          {{ categories[categoryId] }}
         </span>
       </div>
+      <ChangableCounter
+        class="item__count"
+        v-if="countEnabled"
+        :count="itemCount"
+        @changeCount="$emit('changeCount', $event)"
+      />
     </div>
   </router-link>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useStore } from '@/store'
 
-import { TItem } from '@/types/index'
+import { TItem, IItemInCart } from '@/types/index'
+
+import ChangableCounter from '@/components/ChangableCounter.vue'
 
 export default defineComponent({
   name: 'Item',
+  components: {
+    ChangableCounter,
+  },
   props: {
     short: {
       type: Boolean,
       required: true,
     },
     item: {
-      type: Object as () => TItem,
+      type: Object as () => TItem | IItemInCart,
       required: true,
     },
-    categoryNames: {
-      type: Array as () => Array<string>,
-      required: true,
+    countEnabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    itemCount: {
+      type: Number,
+      required: false,
+      default: 0,
     },
   },
   setup (props) {
+    const store = useStore()
+
     const description: string = props.item.description
       .replaceAll(/\\[nt]/gi, '')
       .replaceAll(/<([^>]+)>/gi, '')
 
+    const categories = computed(() => store.state.categories)
+
     return {
       description,
+      categories,
     }
   },
 })
@@ -78,6 +101,8 @@ export default defineComponent({
   flex-flow: row nowrap
   margin-bottom: 1em
 
+  text-decoration: none
+  color: black
   box-shadow: 1px 1px 5px 5px lightgrey
   cursor: pointer
 

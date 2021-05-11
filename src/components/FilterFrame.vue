@@ -44,20 +44,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, reactive } from 'vue'
-
-import { TFilter, TGenericFunction, TFunctionParamsFilterarr } from '@/types/index'
+import { defineComponent, reactive } from 'vue'
+import { useStore, IFilter } from '@/store'
 
 export default defineComponent({
   name: 'FilterFrame',
   setup () {
-    const filters = reactive<TFilter[]>(Object.assign([], inject<TFilter[]>('filters', [])))
-    const globalApplyFilters: TFunctionParamsFilterarr = inject('applyFilters', () => null)
+    const store = useStore()
+
+    const filters = reactive<IFilter[]>(Object.assign([], store.state.mainViewOptions.filters))
+    const closeFilters = () => store.commit('applyFilters', filters)
     const applyFilters = () => {
+      store.commit('setFiltersOpened', false)
       closeFilters()
-      globalApplyFilters(filters)
     }
-    const closeFilters: TGenericFunction = inject('closeFilters', () => null)
 
     return {
       filters,
