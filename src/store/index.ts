@@ -1,9 +1,9 @@
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
-import { IItemInCart, TItem } from '@/types'
+import { IItemInCart, TItem, TCategory } from '@/types'
 
-import { itemRequest, singleItemRequest } from '@/utils'
+import { itemRequest, singleItemRequest, categoryRequest } from '@/utils'
 
 type TFilterType = 'boolean' | 'radio' | 'multiple'
 
@@ -71,15 +71,12 @@ export const store = createStore<State>({
     },
     updateSort (state: State, value: number) {
       state.mainViewOptions.sortValue = value
-      // invokeUpdate
     },
     switchView (state: State) {
       state.mainViewOptions.short = !state.mainViewOptions.short
-      // invokeUpdate
     },
     applyFilters (state: State, filters: IFilter[]) {
       state.mainViewOptions.filters = filters
-      // invokeUpdate
     },
     setFiltersOpened (state: State, value: boolean) {
       state.mainViewOptions.filtersOpened = value
@@ -89,9 +86,22 @@ export const store = createStore<State>({
     },
   },
   actions: {
+    updateSort ({ commit, dispatch }, value: number) {
+      commit('updateSort', value)
+      dispatch('updateItems')
+    },
+    applyFilters ({ commit, dispatch }, filters: IFilter[]) {
+      commit('applyFilters', filters)
+      dispatch('updateItems')
+    },
     async updateItems ({ commit, state }) {
       const items: TItem[] = await itemRequest(state.mainViewOptions.sortValue, state.mainViewOptions.filters)
       commit('updateItems', items)
+
+      const categories: TCategory[] = await categoryRequest()
+      const newCategories: ICategory = {}
+      categories.forEach((c: TCategory) => newCategories[c.id] = c.name)
+      commit('updateCategories', newCategories)
     },
     async updateItemViewItem ({ commit }, id: string) {
       const item: TItem = await singleItemRequest(id)

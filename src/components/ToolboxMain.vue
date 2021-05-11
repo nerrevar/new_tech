@@ -18,11 +18,11 @@
     </div>
     <div
       class="toolbox__filters"
-      @click="openFilters"
+      @click="setFiltersOpened(true)"
     >
       Фильтры
       <FilterFrame
-        v-if="setFiltersOpened(true)"
+        v-if="filtersOpened"
       />
     </div>
     <div class="toolbox__sort">
@@ -54,7 +54,7 @@ export default defineComponent({
   setup () {
     const store = useStore()
 
-    const updateSort = (sortValue: number) => store.commit('updateSort', sortValue)
+    const updateSort = (sortValue: number) => store.dispatch('updateSort', sortValue)
 
     const sortList = [
       { text: 'Лучшее совпадение', propValue: SortValues.RELEVANCE },

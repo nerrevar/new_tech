@@ -53,9 +53,9 @@ export default defineComponent({
     const store = useStore()
 
     const filters = reactive<IFilter[]>(Object.assign([], store.state.mainViewOptions.filters))
-    const closeFilters = () => store.commit('applyFilters', filters)
+    const closeFilters = () => store.commit('setFiltersOpened', false)
     const applyFilters = () => {
-      store.commit('setFiltersOpened', false)
+      store.dispatch('applyFilters', filters)
       closeFilters()
     }
 

@@ -155,6 +155,8 @@ export default defineComponent({
   max-width: 300px
   margin: 1em auto 1em 1em
 
+  text-decoration: none
+  color: black
   padding: 0.3em
   box-shadow: 1px 1px 5px 5px lightgrey
   cursor: pointer

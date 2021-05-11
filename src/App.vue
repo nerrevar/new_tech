@@ -1,7 +1,20 @@
 <template>
+  <div
+    class="toolbar"
+    v-if="showToolbar"
+  >
+    <router-link to="/">
+      <img
+        class="logo"
+        src="@/assets/img/logo.jpg"
+        alt="logo"
+      />
+    </router-link>
+  </div>
   <router-view />
   <router-link
     class="cart"
+    v-if="showCart"
     to="/cart"
   >
     <div class="cart__image">
@@ -19,24 +32,40 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-
+import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'Layout',
   setup () {
     const store = useStore()
+    const router = useRouter()
 
     const countInCart = computed(() => store.state.countInCart)
+    const showCart = computed(() => router.currentRoute.value.path !== '/cart')
+    const showToolbar = computed(() => router.currentRoute.value.path !== '/')
 
     return {
       countInCart,
+      showCart,
+      showToolbar,
     }
   },
 })
 </script>
 
 <style lang="sass" scoped>
+.toolbar
+  width: 100vw
+  height: calc(36px + 1em)
+
+  padding: 0.5em
+  background-color: lightblue
+
+.logo
+  height: 36px
+  object-fit: fill
+
 $cart-size: 5rem
 
 @keyframes pulse-border
