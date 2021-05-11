@@ -1,36 +1,9 @@
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
-import { IItemInCart, TItem, TCategory } from '@/types'
+import { State, ICategory, IFilter, IItemInCart, TItem, TCategory } from '@/types'
 
 import { itemRequest, singleItemRequest, categoryRequest } from '@/utils'
-
-type TFilterType = 'boolean' | 'radio' | 'multiple'
-
-export interface IFilter {
-  displayName: string
-  name: string,
-  type: TFilterType,
-  value: boolean | string | string[],
-}
-
-interface ICategory {
-  [key: number]: string // id: name
-}
-
-export interface State {
-  cart: IItemInCart[],
-  countInCart: number,
-  categories: ICategory,
-  mainViewOptions: {
-    sortValue: number,
-    short: boolean,
-    filters: IFilter[],
-    items: TItem[],
-    filtersOpened: boolean,
-  },
-  itemViewItem: TItem,
-}
 
 export const key: InjectionKey<Store<State>> = Symbol('VuexStore')
 
@@ -57,8 +30,16 @@ export const store = createStore<State>({
   },
   mutations: {
     addToCart (state: State, item: IItemInCart) {
-      state.cart.push(item)
+      if (state.cart.filter((i: IItemInCart) => i.id === item.id).length === 0)
+        state.cart.push(item)
+      else
+        state.cart.filter((i: IItemInCart) => i.id === item.id)[0].count += item.count
       state.countInCart += item.count
+    },
+    removeFromCart (state: State, id: number) {
+      const index = state.cart.findIndex((item: IItemInCart) => item.id === id)
+      state.countInCart -= state.cart[index].count
+      state.cart.splice(index, 1)
     },
     updateItems (state: State, items: TItem[]) {
       state.mainViewOptions.items = items
@@ -83,6 +64,14 @@ export const store = createStore<State>({
     },
     updateItemViewItem (state: State, item: TItem) {
       state.itemViewItem = item
+    },
+    changeCount (state: State, payload: { itemId: number, count: number }) {
+      state.cart.filter((item: IItemInCart) => item.id === payload.itemId)[0].count += payload.count
+      state.countInCart += payload.count
+    },
+    clearCart (state: State) {
+      state.cart = []
+      state.countInCart = 0
     },
   },
   actions: {

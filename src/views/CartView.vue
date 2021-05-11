@@ -9,7 +9,7 @@
       :key="index"
       :item="item"
       :short="false"
-      :countEnabled="true"
+      :inCart="true"
     />
   </div>
   <span
@@ -17,6 +17,13 @@
   >
     Корзина пуста
   </span>
+  <div
+    class="button"
+    v-if="cart.length !== 0"
+    @click="buy"
+  >
+    Оформить заказ
+  </div>
 </template>
 
 <script lang="ts">
@@ -35,9 +42,25 @@ export default defineComponent({
 
     const cart = computed(() => store.state.cart)
 
+    const buy = () => {
+      alert(`Поздравляем! Вы купили ${store.state.countInCart} товар(а)!!!`)
+      store.commit('clearCart')
+    }
+
     return {
       cart,
+      buy,
     }
   },
 })
 </script>
+
+<style lang="sass" scoped>
+*
+  margin: 0.3em
+
+.button
+  padding: 0.5em
+  background-color: orange
+  max-width: 300px
+</style>

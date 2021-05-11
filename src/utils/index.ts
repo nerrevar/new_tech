@@ -1,7 +1,6 @@
 import { reactive } from 'vue'
 
-import { TCategory, TItem, TRequestConfig } from '@/types/index'
-import { IFilter } from '@/store'
+import { IFilter, TCategory, TItem, TRequestConfig } from '@/types'
 
 const storeId = '58958138'
 

@@ -1,10 +1,10 @@
 <template>
-  <router-link
+  <div
     :class="{
       item: !short,
       item_short: short,
     }"
-    :to="`/product/${item.id}`"
+    @click="router.push(`/product/${item.id}`)"
   >
     <img
       class="item__image"
@@ -36,19 +36,37 @@
       </div>
       <ChangableCounter
         class="item__count"
-        v-if="countEnabled"
-        :count="itemCount"
-        @changeCount="$emit('changeCount', $event)"
+        v-if="inCart"
+        :count="item.count"
+        @changeCount="changeCount($event)"
       />
+      <div
+        class="button_orange"
+        v-else
+        @click.stop="addToCart"
+        :style="{
+          'max-width': short ? 'auto' : '300px',
+        }"
+      >
+        Купить
+      </div>
     </div>
-  </router-link>
+    <div
+      class="item__delete"
+      v-if="inCart"
+      @click.stop="removeFromCart"
+    >
+      X
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, toRef } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
 
-import { TItem, IItemInCart } from '@/types/index'
+import { TItem, IItemInCart } from '@/types'
 
 import ChangableCounter from '@/components/ChangableCounter.vue'
 
@@ -66,29 +84,47 @@ export default defineComponent({
       type: Object as () => TItem | IItemInCart,
       required: true,
     },
-    countEnabled: {
+    inCart: {
       type: Boolean,
       required: false,
       default: false,
     },
-    itemCount: {
-      type: Number,
-      required: false,
-      default: 0,
-    },
   },
   setup (props) {
     const store = useStore()
+    const router = useRouter()
 
-    const description: string = props.item.description
+    const thisItem: TItem | IItemInCart = toRef(props, 'item')
+
+    const description: string = thisItem.value.description
       .replaceAll(/\\[nt]/gi, '')
       .replaceAll(/<([^>]+)>/gi, '')
 
     const categories = computed(() => store.state.categories)
 
+    const addToCart = () => store.commit('addToCart', {
+      id: thisItem.value.id,
+      imageUrl: thisItem.value.imageUrl,
+      name: thisItem.value.name,
+      price: thisItem.value.price,
+      description: thisItem.value.description,
+      categoryIds: thisItem.value.categoryIds,
+      categoryNames: thisItem.value.categoryIds.map((id: number): string => store.state.categories[id]),
+      options: [],
+      count: 1,
+    })
+
+    const changeCount = (count: number) => store.commit('changeCount', { itemId: thisItem.value.id, count: count })
+    const removeFromCart = () => store.commit('removeFromCart', thisItem.value.id)
+
     return {
+      thisItem,
+      router,
       description,
       categories,
+      addToCart,
+      changeCount,
+      removeFromCart,
     }
   },
 })
@@ -148,6 +184,15 @@ export default defineComponent({
     background-color: lightblue
     height: 1.8em
 
+  &__delete
+    padding: 0.4em
+    background-color: darken(white, 3)
+    display: flex
+    align-items: center
+
+    &:hover
+      background-color: darken(white, 6)
+
 .item_short
   display: flex
   flex: 0 0
@@ -160,4 +205,9 @@ export default defineComponent({
   padding: 0.3em
   box-shadow: 1px 1px 5px 5px lightgrey
   cursor: pointer
+
+.button_orange
+  padding: 0.5em
+  background-color: orange
+  text-align: center
 </style>

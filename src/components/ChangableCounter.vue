@@ -5,7 +5,7 @@
         'counter__button': minusEnabled,
         'counter__button_disabled': !minusEnabled,
       }"
-      @click="changeCount('minus')"
+      @click.stop="changeCount('minus')"
     >
       -
     </span>
@@ -15,7 +15,7 @@
         'counter__button': plusEnabled,
         'counter__button_disabled': !plusEnabled,
       }"
-      @click="changeCount('plus')"
+      @click.stop="changeCount('plus')"
     >
       +
     </span>
@@ -36,7 +36,7 @@ export default defineComponent({
       type: Number,
       required: false,
       default: Number.MAX_SAFE_INTEGER,
-    }
+    },
   },
   setup (props, { emit }) {
     const minusEnabled = computed(() => props.count > 0)
@@ -62,11 +62,17 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-.button
-  background-color: lightgrey
-  color: grey
+.counter
+  &__count
+    padding: 0.3em
 
-  &_disabled
-    background-color: lighten(lightgrey, 1)
-    color: lightgrey
+  &__button
+    background-color: lightgrey
+    color: grey
+    padding: 0.3em
+    text-align: center
+
+    &_disabled
+      background-color: lighten(lightgrey, 1)
+      color: lightgrey
 </style>

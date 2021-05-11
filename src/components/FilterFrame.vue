@@ -45,7 +45,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
-import { useStore, IFilter } from '@/store'
+import { useStore } from '@/store'
+
+import { IFilter } from '@/types'
 
 export default defineComponent({
   name: 'FilterFrame',
